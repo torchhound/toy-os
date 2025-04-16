@@ -18,6 +18,9 @@ start:
     int 0x13
     jc disk_error
 
+    mov si, boot_msg
+    call print
+
     jmp 0x1000:0x0000
 
 disk_error:
@@ -37,6 +40,7 @@ print:
     ret
 
 error_msg db 'Disk load error', 0
+boot_msg db 'Loading boot...', 0
 
 times 510 - ($ - $$) db 0
 dw 0xAA55
