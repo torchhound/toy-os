@@ -1,14 +1,13 @@
-[BITS 16]
-[ORG 0x7C00]
+BITS 16
+ORG 0x7C00
 
 start:
     cli
     xor ax, ax
     mov ds, ax
-
-    ; load second-stage (loader) from disk to 0x1000:0x0000
-    mov bx, 0x0000
-    mov es, bx
+    
+    mov ax, 0x1000
+    mov es, ax
     mov bx, 0x0000
     mov ah, 0x02
     mov al, 2      ; load 2 sectors

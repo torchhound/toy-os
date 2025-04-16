@@ -4,10 +4,14 @@ global start
 extern kmain
 
 start:
-    ; protected mode setup (GDT etc) here if needed
     mov ax, 0x10
+
     mov ds, ax
     mov ss, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
     mov esp, 0x90000
 
     call kmain

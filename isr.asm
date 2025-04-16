@@ -1,5 +1,5 @@
-[extern keyboard_handler]
-[global isr1]
+extern keyboard_handler
+global isr1
 
 isr1:
     pusha
