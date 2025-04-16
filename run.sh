@@ -1,0 +1,3 @@
+#!/bin/bash
+make
+qemu-system-i386 -drive format=raw,file=os-image.img
