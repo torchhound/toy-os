@@ -1,13 +1,9 @@
-ENTRY(kmain)
+ENTRY(start)
 
 SECTIONS {
-    . = 0x100000;
+  . = 0x10000;
 
-    .text : {
-        *(.multiboot)
-        *(.text*)
-    }
-
-    .data : { *(.data*) }
-    .bss  : { *(.bss*)  }
+  .text : { *(.text*) }
+  .data : { *(.data*) }
+  .bss  : { *(.bss*)  }
 }

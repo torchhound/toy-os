@@ -1,43 +1,43 @@
-[BITS 32]
-section .text
-[extern kmain]
+[BITS 16]
+[ORG 0x7C00]
 
-cli
-xor ax, ax
-mov ds, ax
-
-lgdt [gdt_descriptor]
-
-mov eax, cr0
-or eax, 1
-mov cr0, eax
-
-jmp 0x08:protected_mode
-
-gdt_start:
-    dq 0x0000000000000000
-    dq 0x00CF9A000000FFFF
-    dq 0x00CF92000000FFFF
-gdt_end:
-
-gdt_descriptor:
-    dw gdt_end - gdt_start - 1
-    dd gdt_start
-
-[BITS 32]
-protected_mode:
-    mov ax, 0x10
+start:
+    cli
+    xor ax, ax
     mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
 
-    mov esp, 0x90000
+    ; load second-stage (loader) from disk to 0x1000:0x0000
+    mov bx, 0x0000
+    mov es, bx
+    mov bx, 0x0000
+    mov ah, 0x02
+    mov al, 2      ; load 2 sectors
+    mov ch, 0
+    mov cl, 2
+    mov dh, 0
+    mov dl, 0x80   ; first hard disk
+    int 0x13
+    jc disk_error
 
-    call kmain
-    hlt
+    jmp 0x1000:0x0000
+
+disk_error:
+    mov si, error_msg
+    call print
     jmp $
 
-times 510-($-$$) db 0
+print:
+    mov ah, 0x0E
+.loop:
+    lodsb
+    or al, al
+    jz .done
+    int 0x10
+    jmp .loop
+.done:
+    ret
+
+error_msg db 'Disk load error', 0
+
+times 510 - ($ - $$) db 0
 dw 0xAA55
