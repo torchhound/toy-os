@@ -2,23 +2,17 @@ BITS 16
 ORG 0x0000
 global start
 
-gdt_start:
-    dq 0x0000000000000000
-    dq 0x00CF9A000000FFFF
-    dq 0x00CF92000000FFFF
-gdt_end:
-
-gdt_descriptor:
-    dw gdt_end - gdt_start - 1
-    dd gdt_start
-
 start:
+    cli
+    mov ax, 0x1000
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
     mov si, load_msg
     call print
-
-    cli
-    xor ax, ax
-    mov ds, ax
 
     lgdt [gdt_descriptor]
 
@@ -58,6 +52,16 @@ protected_mode:
 
     call 0x000101ab
     jmp $
+
+gdt_start:
+    dq 0x0000000000000000
+    dq 0x00CF9A000000FFFF
+    dq 0x00CF92000000FFFF
+gdt_end:
+
+gdt_descriptor:
+    dw gdt_end - gdt_start - 1
+    dd gdt_start
 
 pprint:
     pusha
