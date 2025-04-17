@@ -16,10 +16,10 @@ kernel.o: kernel.c
 	gcc -m32 -ffreestanding -fno-pic -nostdlib -nostartfiles -nodefaultlibs -c kernel.c -o kernel.o
 
 kernel.bin: kernel.o isr.o
-	ld -m elf_i386 -T link.ld -o kernel.bin kernel.o isr.o
+	ld -m elf_i386 -T link.ld -Map=kernel.map -o kernel.bin kernel.o isr.o
 
 isr.o: isr.asm
 	nasm -f elf32 isr.asm -o isr.o
 
 clean:
-	rm -f *.o *.bin *.img
+	rm -f *.o *.bin *.img *.map

@@ -1,4 +1,5 @@
-BITS 32
+BITS 16
+ORG 0x0000
 global start
 
 gdt_start:
@@ -12,7 +13,7 @@ gdt_descriptor:
     dd gdt_start
 
 start:
-    mov esi, load_msg
+    mov si, load_msg
     call print
 
     cli
@@ -27,7 +28,24 @@ start:
 
     jmp 0x08:protected_mode
 
+print:
+    mov ah, 0x0E
+.loop:
+    lodsb
+    or al, al
+    jz .done
+    int 0x10
+    jmp .loop
+.done:
+    ret
+
+load_msg db 'Loading loader...', 0
+
+BITS 32
 protected_mode:
+    mov esi, protected_load_msg
+    call pprint
+
     mov ax, 0x10
 
     mov ds, ax
@@ -38,11 +56,10 @@ protected_mode:
 
     mov esp, 0x90000
 
-    extern kmain
-    call kmain
+    call 0x000101ab
     jmp $
 
-print:
+pprint:
     pusha
     mov edi, 0xB8000   ; start of VGA text buffer
 .next:
@@ -56,5 +73,5 @@ print:
     popa
     ret
 
-load_msg:
-    db 'Loading loader...', 0
+protected_load_msg:
+    db 'Loading protected mode...', 0
