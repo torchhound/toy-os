@@ -1,7 +1,7 @@
 all: os-image
 
 os-image: boot.bin loader.o kernel.o isr.o
-	ld -m elf_i386 -T link.ld -o kernel.bin loader.o kernel.o isr.o
+	ld -m elf_i386 -T link.ld -Map=kernel.map -o kernel.bin loader.o kernel.o isr.o
 	cat boot.bin kernel.bin > os-image.img
 
 boot.bin: boot.asm
@@ -17,4 +17,4 @@ isr.o: isr.asm
 	nasm -f elf32 isr.asm -o isr.o
 
 clean:
-	rm -f *.o *.bin *.img
+	rm -f *.o *.bin *.img *.map
