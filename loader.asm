@@ -3,16 +3,12 @@ ORG 0x0000
 global start
 
 start:
-    cli
-    mov ax, 0x1000
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
-
     mov si, load_msg
     call print
+
+    cli
+    xor ax, ax
+    mov ds, ax
 
     lgdt [gdt_descriptor]
 
